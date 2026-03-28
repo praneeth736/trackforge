@@ -3,6 +3,8 @@
 const express = require("express");
 const router = express.Router();
 
+const protect=require("../middleware/authMiddleware");
+
 const {
   getTasks,
   createTask,
@@ -11,12 +13,12 @@ const {
 } = require("../controllers/taskController");
 
 // GET all tasks
-router.get("/", getTasks);
+router.get("/", protect,getTasks);
 
 // POST new task
-router.post("/", createTask);
+router.post("/", protect,createTask);
 // UPDATE the task
-router.put("/:id",updateTask);
+router.put("/:id",protect,updateTask);
 //DELETE the task
-router.delete("/:id",deleteTask);
+router.delete("/:id",protect,deleteTask);
 module.exports = router;

@@ -295,3 +295,91 @@ Think of backend like a **restaurant system**:
 * Implement JWT middleware
 * Protect routes (only logged-in users access tasks)
 * Connect tasks with users
+
+## Day 6
+
+### ✅ Work Done
+
+* Created **authentication middleware (authMiddleware.js)**
+* Implemented **JWT token verification using jwt.verify()**
+* Protected all task routes using middleware
+* Modified routes to include middleware before controllers
+* Tested APIs with Authorization headers in Postman
+* Added logging to track authentication flow
+
+---
+
+### 🧠 What I Learned
+
+---
+
+## 🔐 1. Authentication vs Authorization
+
+* Authentication → Who are you? (Login)
+* Authorization → Are you allowed? (Access control)
+
+---
+
+## 🎟️ 2. JWT Flow (Core Concept)
+
+1. User logs in → backend generates token
+2. Client stores token
+3. Client sends token in headers
+4. Backend verifies token before processing request
+
+---
+
+## 🔄 3. Middleware Execution Flow
+
+```text
+Request → Middleware → Controller → Response
+```
+
+* Middleware runs BEFORE controller
+* Can allow or block request
+
+---
+
+## 🔑 4. Authorization Header
+
+```text
+Authorization: Bearer <token>
+```
+
+* "Bearer" is standard format
+* Token is extracted and verified
+
+---
+
+## 🧠 5. Request Flow with JWT
+
+```text
+Client
+  ↓
+server.js
+  ↓
+routes
+  ↓
+authMiddleware (JWT verification)
+  ↓
+controller
+  ↓
+database
+  ↓
+response
+```
+
+---
+
+## 🧠 6. Error Handling in Middleware
+
+* No token → 401 Unauthorized
+* Invalid token → 401 Unauthorized
+* Valid token → request continues
+
+---
+
+### 🚀 Next
+
+* Link tasks with users (user-specific data)
+* Only show tasks of logged-in user
