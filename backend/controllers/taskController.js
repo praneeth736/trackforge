@@ -2,7 +2,7 @@ const Task = require("../models/taskModel");
 
 // GET all tasks
 const getTasks = async (req, res) => {
-  const tasks = await Task.find();
+  const tasks = await Task.find({user:req.user.id});
   res.json(tasks);
 };
 
@@ -18,6 +18,7 @@ const createTask = async (req, res) => {
   const task = await Task.create({
     title,
     priority:priority || "low",
+    user:req.user.id,
   });
   console.log("Task created:",task);
   res.status(201).json(task);
@@ -31,17 +32,21 @@ const createTask = async (req, res) => {
 const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedTask = await Task.findByIdAndUpdate(
-      id,
-      req.body,
-      { new: true }
-    );
 
-    if (!updatedTask) {
+    const task = await Task.findOne({
+      _id: id,
+      user: req.user.id,   
+    });
+
+    if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    res.json(updatedTask);
+    task.status = req.body.status || task.status;
+
+    await task.save();
+
+    res.json(task);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -52,11 +57,16 @@ const deleteTask = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedTask = await Task.findByIdAndDelete(id);
+    const task = await Task.findOne({
+      _id: id,
+      user: req.user.id,
+    });
 
-    if (!deletedTask) {
+    if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
+
+    await task.deleteOne();
 
     res.json({ message: "Task deleted successfully" });
   } catch (error) {
