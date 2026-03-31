@@ -17,7 +17,7 @@ const createTask = async (req, res) => {
   }
   const task = await Task.create({
     title,
-    priority,
+    priority:priority || "low",
   });
   console.log("Task created:",task);
   res.status(201).json(task);

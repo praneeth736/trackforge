@@ -44,6 +44,11 @@ const login = async (req, res) => {
     console.log("Login request received");
     const { email, password } = req.body;
 
+    if (!email || !password) {
+        console.log("Missing fields");
+      return res.status(400).json({ message: "All fields required" });
+    }
+    
     const user = await User.findOne({ email });
     if (!user) {
         console.log("User not found");
@@ -57,7 +62,7 @@ const login = async (req, res) => {
     }
 
     console.log("Login successful");
-    const token = jwt.sign({ id: user._id }, SECRET, {
+    const token = jwt.sign({ id: user._id, role:user.role }, SECRET, {
       expiresIn: "1d",
     });
     console.log("Token generated");

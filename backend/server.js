@@ -1,4 +1,5 @@
 require("dotenv").config();
+const cors=require("cors");
 const express = require("express");
 const connectDB=require("./config/db");
 const authRoutes=require("./routes/authRoutes");
@@ -7,14 +8,14 @@ const app = express();
 const PORT = 5000;
 
 connectDB();
-
+app.use(cors());
 app.use(express.json());
 
 // import routes
 const taskRoutes = require("./routes/taskRoutes");
-app.use("/auth",authRoutes);
+app.use("/api/v1/auth",authRoutes);
 // use routes
-app.use("/tasks", taskRoutes);
+app.use("/api/v1/tasks", taskRoutes);
 
 app.use((err,req,res,next)=>{
   console.error("Error:",err.message);

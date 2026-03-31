@@ -2,6 +2,7 @@
 
 const express = require("express");
 const router = express.Router();
+const adminOnly=require("../middleware/adminMiddleware");
 
 const protect=require("../middleware/authMiddleware");
 
@@ -20,5 +21,5 @@ router.post("/", protect,createTask);
 // UPDATE the task
 router.put("/:id",protect,updateTask);
 //DELETE the task
-router.delete("/:id",protect,deleteTask);
+router.delete("/:id",protect,adminOnly,deleteTask);
 module.exports = router;
