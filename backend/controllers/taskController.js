@@ -57,13 +57,17 @@ const deleteTask = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const task = await Task.findOne({
-      _id: id,
-      user: req.user.id,
-    });
+    const task=await Task.findById(id);
 
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
+    }
+
+    if (
+      task.user.toString() !== req.user.id &&
+      req.user.role !== "admin"
+    ) {
+      return res.status(403).json({ message: "Not authorized" });
     }
 
     await task.deleteOne();
@@ -74,9 +78,35 @@ const deleteTask = async (req, res) => {
   }
 };
 
+
+const getTaskStats = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const total = await Task.countDocuments({ user: userId });
+    const completed = await Task.countDocuments({
+      user: userId,
+      status: "completed",
+    });
+    const pending = await Task.countDocuments({
+      user: userId,
+      status: "pending",
+    });
+
+    res.json({
+      total,
+      completed,
+      pending,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getTasks,
   createTask,
   updateTask,
   deleteTask,
+  getTaskStats,
 };
