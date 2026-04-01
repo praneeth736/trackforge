@@ -55,7 +55,7 @@ function Dashboard() {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token,
       },
-      body: JSON.stringify({ title, priority }), // 🔥 FIXED
+      body: JSON.stringify({ title, priority }),
     });
 
     const data = await res.json();
@@ -98,30 +98,48 @@ function Dashboard() {
     const data = await res.json();
 
     if (res.ok) {
-      getTasks(); // refresh
+      getTasks(); // refresh tasks
     } else {
       alert(data.message);
     }
   };
 
+  // 🔐 CONDITIONAL RENDERING
+
+  if (!token) {
+    return (
+      <div style={{ padding: "20px" }}>
+        <h1>🚀 TrackForge</h1>
+
+        <h2>Signup / Login</h2>
+
+        <input
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <br /><br />
+
+        <input
+          placeholder="Password"
+          type="password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <br /><br />
+
+        <button onClick={signup}>Signup</button>
+        <button onClick={login}>Login</button>
+      </div>
+    );
+  }
+
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1>🚀 TrackForge</h1>
+    <div style={{ padding: "20px" }}>
+      <h1>📋 Your Tasks</h1>
 
-      <h2>Signup / Login</h2>
-      <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-      <input
-        placeholder="Password"
-        type="password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br /><br />
-      <button onClick={signup}>Signup</button>
-      <button onClick={login}>Login</button>
+      <button onClick={() => setToken("")}>Logout</button>
 
-      <hr />
-
-      <h2>Tasks</h2>
+      <h3>Add Task</h3>
 
       <input
         placeholder="Task title"
@@ -135,6 +153,7 @@ function Dashboard() {
       </select>
 
       <br /><br />
+
       <button onClick={createTask}>Add Task</button>
       <button onClick={getTasks}>Load Tasks</button>
 
