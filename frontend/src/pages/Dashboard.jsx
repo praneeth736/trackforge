@@ -1,23 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Dashboard() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
   const [tasks, setTasks] = useState([]);
-  const [stats,setStats]=useState({
-    total:0,
-    completed:0,
-    pending:0,
+
+  const [stats, setStats] = useState({
+    total: 0,
+    completed: 0,
+    pending: 0,
   });
+
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState("low");
+
+  const [filterStatus, setFilterStatus] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 5;
 
   // 🔥 EDIT STATES
   const [editingId, setEditingId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [editPriority, setEditPriority] = useState("low");
   const [editStatus, setEditStatus] = useState("pending");
+
+  // 🔥 AUTO FETCH (MAIN FIX)
+  useEffect(() => {
+    if (token) {
+      getTasks();
+    }
+  }, [page, filterStatus, token]);
+
   // 🔥 SIGNUP
   const signup = async () => {
     const res = await fetch("http://localhost:5000/api/v1/auth/signup", {
@@ -71,8 +85,8 @@ function Dashboard() {
     const data = await res.json();
 
     if (res.ok) {
-      setTasks([...tasks, data]);
-      setTitle(""); // clear input
+      setTitle("");
+      getTasks(); // refresh
     } else {
       alert(data.message);
     }
@@ -80,7 +94,28 @@ function Dashboard() {
 
   // 🔥 GET TASKS
   const getTasks = async () => {
-    const res = await fetch("http://localhost:5000/api/v1/tasks", {
+    const res = await fetch(
+      `http://localhost:5000/api/v1/tasks?status=${filterStatus}&page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setTasks(data.tasks);
+      getStats();
+    } else {
+      alert(data.message);
+    }
+  };
+
+  // 🔥 GET STATS
+  const getStats = async () => {
+    const res = await fetch("http://localhost:5000/api/v1/tasks/stats", {
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -89,28 +124,10 @@ function Dashboard() {
     const data = await res.json();
 
     if (res.ok) {
-      setTasks(data);
-      getStats();
-    } else {
-      alert(data.message);
+      setStats(data);
     }
   };
 
-  const getStats = async () => {
-  const res = await fetch("http://localhost:5000/api/v1/tasks/stats", {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-  });
-
-  const data = await res.json();
-
-  if (res.ok) {
-    setStats(data);
-  } else {
-    alert(data.message);
-  }
-};
   // 🔥 DELETE TASK
   const deleteTask = async (id) => {
     const res = await fetch(`http://localhost:5000/api/v1/tasks/${id}`, {
@@ -120,16 +137,10 @@ function Dashboard() {
       },
     });
 
-    const data = await res.json();
-
     if (res.ok) {
       getTasks();
     } else {
-      if (res.status === 403) {
-        alert("Not authorized to delete");
-      } else {
-        alert(data.message);
-      }
+      alert("Delete failed");
     }
   };
 
@@ -156,13 +167,11 @@ function Dashboard() {
       }),
     });
 
-    const data = await res.json();
-
     if (res.ok) {
       setEditingId(null);
       getTasks();
     } else {
-      alert(data.message);
+      alert("Update failed");
     }
   };
 
@@ -174,7 +183,10 @@ function Dashboard() {
 
         <h2>Signup / Login</h2>
 
-        <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+        <input
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <br /><br />
 
         <input
@@ -197,10 +209,10 @@ function Dashboard() {
       <h1>📋 Your Tasks</h1>
 
       <h3>📊 Analytics</h3>
-      <p>Total Tasks: {stats.total}</p>
+      <p>Total: {stats.total}</p>
       <p>Completed: {stats.completed}</p>
       <p>Pending: {stats.pending}</p>
-      
+
       <button onClick={() => setToken("")}>Logout</button>
 
       <h3>Add Task</h3>
@@ -220,7 +232,14 @@ function Dashboard() {
       <br /><br />
 
       <button onClick={createTask}>Add Task</button>
-      <button onClick={getTasks}>Load Tasks</button>
+
+      <h3>Filter</h3>
+
+      <select onChange={(e) => setFilterStatus(e.target.value)}>
+        <option value="">All</option>
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+      </select>
 
       <ul>
         {tasks.map((t) => (
@@ -263,6 +282,21 @@ function Dashboard() {
           </li>
         ))}
       </ul>
+
+      <br />
+
+      <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+        Prev
+      </button>
+
+      <span> Page {page} </span>
+
+      <button
+        onClick={() => setPage(page + 1)}
+        disabled={tasks.length < limit}
+      >
+        Next
+      </button>
     </div>
   );
 }

@@ -2,8 +2,39 @@ const Task = require("../models/taskModel");
 
 // GET all tasks
 const getTasks = async (req, res) => {
-  const tasks = await Task.find({user:req.user.id});
-  res.json(tasks);
+  try {
+    const userId = req.user.id;
+
+    const status = req.query.status;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+
+    // 🔥 QUERY OBJECT
+    const query = { user: userId };
+
+    if (status) {
+      query.status = status;
+    }
+
+    // 🔥 PAGINATION LOGIC
+    const skip = (page - 1) * limit;
+
+    const tasks = await Task.find(query)
+      .skip(skip)
+      .limit(limit);
+
+    const total = await Task.countDocuments(query);
+
+    res.json({
+      total,
+      page,
+      limit,
+      tasks,
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // CREATE task
