@@ -74,7 +74,11 @@ TrackForge is not just a basic to-do app — it is a **backend-focused system** 
 
 ## 🐳 Docker Setup
 
-Run the entire application using:
-
+Run the entire application using 2 steps:
+step 1:
 ```bash
 docker-compose up --build
+
+step 2:
+cd backend > node server.js
+cd frontend > npm run dev 
