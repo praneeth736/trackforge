@@ -1,151 +1,80 @@
-# 🚀 TrackForge – Full Stack Task Management System
+# 🚀 TrackForge
 
-TrackForge is a secure and scalable full-stack task management application designed with real-world backend architecture principles. It enables users to manage tasks efficiently with authentication, authorization, and structured API design.
-
----
-
-## 🌟 Key Features
-
-* 🔐 **JWT Authentication** – Secure login & signup system
-* 🛡️ **Protected Routes** – Middleware-based access control
-* 👤 **User-Specific Tasks** – Each user can only access their own tasks
-* 📝 **Task Management (CRUD)** – Create, read, update, delete tasks
-* 📊 **Task Status Tracking** – Mark tasks as *pending* or *completed*
-* ⚡ **Priority Levels** – Assign low, medium, or high priority to tasks
-* 🔄 **Real-Time Updates** – UI updates after operations
-* 🧩 **Modular Backend Architecture** – Controllers, routes, middleware separation
+A full-stack task management system designed to demonstrate **real-world backend engineering concepts** including authentication, API design, scalability, and containerized deployment.
 
 ---
 
-## 🧠 Project Architecture
+## 🎯 Overview
 
-```text
-Frontend (React)
-       ↓
-REST API (Express.js)
-       ↓
-Authentication Middleware (JWT)
-       ↓
-Controllers (Business Logic)
-       ↓
-MongoDB (Database)
-```
+TrackForge is not just a basic to-do app — it is a **backend-focused system** that showcases:
+
+- Secure authentication
+- Scalable API design
+- Clean architecture (MVC)
+- Efficient data handling (pagination, filtering)
+- Full-stack integration
+- Docker-based deployment
 
 ---
 
-## 🛠️ Tech Stack
-
-### Backend
-
-* Node.js
-* Express.js
-* MongoDB (Mongoose)
-* JWT (Authentication)
-* bcrypt (Password hashing)
-
-### Frontend
-
-* React.js (Vite)
-* Fetch API
-
----
-
-## 📡 API Endpoints
+## 🔥 Features
 
 ### 🔐 Authentication
-
-| Method | Endpoint              | Description   |
-| ------ | --------------------- | ------------- |
-| POST   | `/api/v1/auth/signup` | Register user |
-| POST   | `/api/v1/auth/login`  | Login user    |
-
----
-
-### 📋 Tasks
-
-| Method | Endpoint            | Description         |
-| ------ | ------------------- | ------------------- |
-| GET    | `/api/v1/tasks`     | Get user tasks      |
-| POST   | `/api/v1/tasks`     | Create task         |
-| PUT    | `/api/v1/tasks/:id` | Update task status  |
-| DELETE | `/api/v1/tasks/:id` | Delete task (Admin) |
+- User Signup & Login
+- Password hashing using bcrypt
+- JWT-based authentication
+- Protected routes with middleware
 
 ---
 
-## 🔐 Authentication Usage
-
-All protected routes require:
-
-```
-Authorization: Bearer <token>
-```
+### 📦 Task Management
+- Create, update, delete tasks
+- User-specific task isolation
+- Task priority (low, medium, high)
+- Task status (pending, completed)
 
 ---
 
-## ▶️ How to Run Locally
-
-### Backend
-
-```
-cd backend
-npm install
-node server.js
-```
+### 📊 Analytics
+- Total tasks
+- Completed tasks
+- Pending tasks
 
 ---
 
-### Frontend
-
-```
-cd frontend
-npm install
-npm run dev
-```
-
----
-
-## 🧪 API Testing
-
-You can test APIs using:
-
-* Postman collection (included or shared)
-* Or directly via frontend UI
+### 🔍 Advanced Backend Features
+- Pagination (page & limit)
+- Filtering (status-based)
+- RESTful API design
+- Centralized error handling
+- Middleware-based architecture
 
 ---
 
-## 🚀 Scalability & Design Considerations
-
-* Modular architecture enables easy feature extension
-* JWT-based stateless authentication improves scalability
-* Can be extended with:
-
-  * Redis caching
-  * Microservices architecture
-  * Docker deployment
-  * Message queues (RabbitMQ)
+### 🎨 Frontend
+- Built with React (Vite)
+- Authentication UI (Login/Signup)
+- Task dashboard
+- Dynamic updates (filtering, pagination)
+- Clean and minimal UI
 
 ---
 
-## 💡 What Makes This Project Strong
+## 🧱 Tech Stack
 
-* Implements **real-world backend patterns**
-* Demonstrates **secure API design**
-* Handles **user-level data isolation**
-* Shows **full-stack integration**
-
----
-
-## 👨‍💻 Author
-
-**Praneeth**
-🔗 GitHub: https://github.com/praneeth736
+| Layer       | Technology |
+|------------|-----------|
+| Frontend   | React (Vite) |
+| Backend    | Node.js + Express |
+| Database   | MongoDB |
+| Auth       | JWT + bcrypt |
+| DevOps     | Docker |
 
 ---
 
-## ⭐ Future Enhancements
+## 🐳 Docker Setup
 
-* Dashboard analytics (task stats)
-* Filtering & sorting tasks
-* UI improvements
-* Notifications system
-* Async task processing (RabbitMQ)
+Run the entire application using:
+
+```bash
+docker-compose up --build

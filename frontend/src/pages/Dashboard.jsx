@@ -177,44 +177,36 @@ function Dashboard() {
 
   // 🔐 AUTH UI
   if (!token) {
-    return (
-      <div style={{ padding: "20px" }}>
+  return (
+    <div className="container">
+      <div className="card">
         <h1>🚀 TrackForge</h1>
+        <h3>Login / Signup</h3>
 
-        <h2>Signup / Login</h2>
+        <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
 
-        <input
-          placeholder="Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <br /><br />
-
-        <input
-          placeholder="Password"
-          type="password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <br /><br />
-
+        <br />
         <button onClick={signup}>Signup</button>
         <button onClick={login}>Login</button>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   // 🔐 DASHBOARD
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>📋 Your Tasks</h1>
+  <div className="container">
 
-      <h3>📊 Analytics</h3>
+    <div className="card">
+      <h2>📊 Analytics</h2>
       <p>Total: {stats.total}</p>
       <p>Completed: {stats.completed}</p>
       <p>Pending: {stats.pending}</p>
-
       <button onClick={() => setToken("")}>Logout</button>
+    </div>
 
+    <div className="card">
       <h3>Add Task</h3>
 
       <input
@@ -229,59 +221,59 @@ function Dashboard() {
         <option value="high">High</option>
       </select>
 
-      <br /><br />
+      <button onClick={createTask}>Add</button>
+    </div>
 
-      <button onClick={createTask}>Add Task</button>
-
+    <div className="card">
       <h3>Filter</h3>
-
       <select onChange={(e) => setFilterStatus(e.target.value)}>
         <option value="">All</option>
         <option value="pending">Pending</option>
         <option value="completed">Completed</option>
       </select>
+    </div>
 
-      <ul>
-        {tasks.map((t) => (
-          <li key={t._id}>
-            {editingId === t._id ? (
-              <>
-                <input
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                />
+    <div className="card">
+      <h3>Tasks</h3>
 
-                <select
-                  value={editPriority}
-                  onChange={(e) => setEditPriority(e.target.value)}
-                >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                </select>
+      {tasks.map((t) => (
+        <div className="task" key={t._id}>
 
-                <select
-                  value={editStatus}
-                  onChange={(e) => setEditStatus(e.target.value)}
-                >
-                  <option value="pending">Pending</option>
-                  <option value="completed">Completed</option>
-                </select>
+          {editingId === t._id ? (
+            <>
+              <input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
 
-                <button onClick={() => saveEdit(t._id)}>Save</button>
-                <button onClick={() => setEditingId(null)}>Cancel</button>
-              </>
-            ) : (
-              <>
-                {t.title} | {t.priority} | {t.status}
+              <select value={editPriority} onChange={(e) => setEditPriority(e.target.value)}>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
 
+              <select value={editStatus} onChange={(e) => setEditStatus(e.target.value)}>
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+              </select>
+
+              <button onClick={() => saveEdit(t._id)}>Save</button>
+            </>
+          ) : (
+            <>
+              <span>
+                {t.title} | {t.priority}
+              </span>
+
+              <span className={`badge ${t.status}`}>
+                {t.status}
+              </span>
+
+              <div>
                 <button onClick={() => startEdit(t)}>Edit</button>
                 <button onClick={() => deleteTask(t._id)}>Delete</button>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+              </div>
+            </>
+          )}
+        </div>
+      ))}
 
       <br />
 
@@ -291,14 +283,13 @@ function Dashboard() {
 
       <span> Page {page} </span>
 
-      <button
-        onClick={() => setPage(page + 1)}
-        disabled={tasks.length < limit}
-      >
+      <button onClick={() => setPage(page + 1)} disabled={tasks.length < limit}>
         Next
       </button>
     </div>
-  );
+
+  </div>
+);
 }
 
 export default Dashboard;
