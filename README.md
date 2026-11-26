@@ -74,11 +74,46 @@ TrackForge is not just a basic to-do app — it is a **backend-focused system** 
 
 ## 🐳 Docker Setup
 
-Run the entire application using 2 steps:
-step 1:
-```bash
-docker-compose up --build
 
-step 2:
-cd backend > node server.js
-cd frontend > npm run dev 
+## Getting Started
+
+### Prerequisites
+- Docker Desktop installed and running
+- Git installed
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/praneeth736/trackforge.git
+   ```
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd trackforge
+   ```
+
+3. Start the application using Docker Compose:
+
+   ```bash
+   docker compose up --build
+   ```
+
+4. Access the application:
+
+   - Frontend: http://localhost:5173
+   - Backend: http://localhost:5000
+
+Docker Compose automatically builds and starts the frontend, backend, and MongoDB containers.
+
+No separate frontend or backend startup commands are required.
+
+### Stopping the Application
+
+Press `Ctrl + C` in the terminal, then run:
+
+```bash
+docker compose down
+```
