@@ -60,26 +60,46 @@ const createTask = async (req, res) => {
 };
 
 // UPDATE task
+
+// UPDATE task
 const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
 
     const task = await Task.findOne({
       _id: id,
-      user: req.user.id,   
+      user: req.user.id,
     });
 
     if (!task) {
-      return res.status(404).json({ message: "Task not found" });
+      return res.status(404).json({
+        message: "Task not found",
+      });
     }
 
-    task.status = req.body.status || task.status;
+    const { title, priority, status } = req.body;
+
+    // Update only the fields provided by the frontend
+    if (title !== undefined) {
+      task.title = title;
+    }
+
+    if (priority !== undefined) {
+      task.priority = priority;
+    }
+
+    if (status !== undefined) {
+      task.status = status;
+    }
 
     await task.save();
 
     res.json(task);
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
